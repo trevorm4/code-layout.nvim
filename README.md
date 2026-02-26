@@ -2,6 +2,14 @@
 
 A neovim layout to show LSP symbols in a tree like structure, either in a split window or a floating window using [fzf-lua](https://github.com/ibhagwan/fzf-lua)
 
+#### Sidebar
+<img width="2526" height="1365" alt="Screenshot 2026-02-26 at 12 05 20 PM" src="https://github.com/user-attachments/assets/1878b7a4-9ee3-4344-865e-a8c846b3f364" />
+
+#### Floating fuzzy finder (requires fzf-lua)
+<img width="2283" height="1036" alt="Screenshot 2026-02-26 at 1 19 55 PM" src="https://github.com/user-attachments/assets/fb3aa7d2-d8c7-4d9f-93bb-403a8a316329" />
+
+
+
 ## 📦 Installation
 
 ### [lazy.nvim](https://github.com/folke/lazy.nvim)
