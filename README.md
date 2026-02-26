@@ -37,8 +37,8 @@ A neovim layout to show LSP symbols in a tree like structure, either in a split 
 Plug 'trevorm4/code-layout.nvim'
 Plug 'ibhagwan/fzf-lua' " Optional for fuzzy finding
 ```
-
-## 🚀 Usage
+> [!NOTE]
+> I have only personally used [lazy.nvim](https://github.com/folke/lazy.nvim), so please create an issue if it does not work with other plugin managers
 
 ### Commands
 
@@ -72,6 +72,11 @@ cl:left(20, 50, nil, "My Window")
   :bufopt('filetype', 'markdown')
   :done()
 ```
+
+## Acknowledgements
+
+- Heavily inspired by [lspsaga](https://github.com/nvimdev/lspsaga.nvim/), although it is no longer in development
+
 
 ## 📄 License
 
