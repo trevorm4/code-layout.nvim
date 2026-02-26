@@ -50,39 +50,42 @@ function M.right(left_winid, opt)
   opt = opt or {}
   local win_conf = api.nvim_win_get_config(left_winid)
   local original = vim.deepcopy(win_conf)
-  local row = is_ten and win_conf.row or win_conf.row[false]
-  local wincol = fn.win_screenpos(win_conf.win)[2]
+  local row = (is_ten and win_conf.row or (win_conf.row and win_conf.row[false])) or 0
+  local wincol = fn.win_screenpos(left_winid)[2]
+  local col = (is_ten and win_conf.col or (win_conf.col and win_conf.col[false])) or 0
   local right_spaces = vim.o.columns
     - wincol
-    - original.width
-    - (is_ten and original.col or original.col[false])
-  local left_spaces = wincol + (is_ten and original.col or original.col[false])
+    - (original.width or 0)
+    - col
+  local left_spaces = wincol + col
   local percent = opt.width or 0.7
 
   local right = math.ceil(right_spaces * percent)
   local left = math.ceil(left_spaces * percent)
   local in_right = false
-  local WIDTH = api.nvim_win_get_width(original.win)
-  local extra = WIDTH < original.width and WIDTH - original.width or 0
+  local WIDTH = api.nvim_win_get_width(left_winid)
+  local extra = (original.width and WIDTH < original.width) and WIDTH - original.width or 0
   if (vim.o.columns - WIDTH - wincol) > 0 and left > 45 then
     extra = 0
   end
 
-  win_conf.width = nil
+  win_conf.relative = 'editor'
   if right > 45 then
-    win_conf.col = (is_ten and win_conf.col or win_conf.col[false]) + original.width + 2
+    win_conf.col = col + (original.width or 0) + 2
     win_conf.width = right
     in_right = true
   elseif left > 45 then
     win_conf.width = math.floor(left * percent)
-    win_conf.col = (is_ten and original.col or original.col[false]) - win_conf.width + extra - 1
+    win_conf.col = col - win_conf.width + extra - 1
   elseif right > 20 then
-    win_conf.col = (is_ten and win_conf.col or win_conf.col[false]) + original.width + 2
+    win_conf.col = col + (original.width or 0) + 2
     win_conf.width = right
     in_right = true
+  else
+    win_conf.col = col + (original.width or 0) + 2
   end
 
-  if original.border then
+  if type(original.border) == 'table' then
     local map = border_map()['rounded']
     if not in_right then
       original.border[1] = map[2]
@@ -97,7 +100,10 @@ function M.right(left_winid, opt)
     api.nvim_win_set_config(left_winid, original)
   end
 
+  win_conf.width = win_conf.width or 30
+  win_conf.height = win_conf.height or 20
   win_conf.row = row
+  win_conf.split = nil
   win_conf.title = nil
   win_conf.title_pos = nil
 
