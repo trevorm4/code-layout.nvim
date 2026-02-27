@@ -26,7 +26,11 @@ A neovim layout to show LSP symbols in a tree like structure, either in a split 
     { "<leader>lf", "<cmd>CodeLayoutFloat<cr>", desc = "Open LSP symbol tree (fuzzy)" },
   },
   config = function()
-    -- Plugin initializes itself, no setup() call required unless adding custom logic
+    require('code_layout').setup({
+      floating = {
+        annotate = true, -- Set to false to hide the full symbol path in the fzf window
+      },
+    })
   end,
 }
 ```
@@ -37,8 +41,21 @@ A neovim layout to show LSP symbols in a tree like structure, either in a split 
 Plug 'trevorm4/code-layout.nvim'
 Plug 'ibhagwan/fzf-lua' " Optional for fuzzy finding
 ```
-> [!NOTE]
-> I have only personally used [lazy.nvim](https://github.com/folke/lazy.nvim), so please create an issue if it does not work with other plugin managers
+
+### Configuration
+
+The plugin works out of the box without calling `setup()`. If you want to customize its behavior, you can call `setup()` with your preferred options.
+
+The following are the default settings:
+
+```lua
+require('code_layout').setup({
+  floating = {
+    -- Whether to show the full symbol path (e.g., "Class › Method") in the fzf window.
+    annotate = true,
+  },
+})
+```
 
 ### Commands
 
@@ -47,6 +64,9 @@ Plug 'ibhagwan/fzf-lua' " Optional for fuzzy finding
 | `:CodeLayoutRight` | Opens the LSP symbol tree in a vertical sidebar on the right. |
 | `:CodeLayoutLeft` | Opens the LSP symbol tree in a vertical sidebar on the left. |
 | `:CodeLayoutFloat` | Opens a floating fuzzy finder (powered by fzf-lua) for symbols. |
+
+> [!NOTE]
+> I have only personally used [lazy.nvim](https://github.com/folke/lazy.nvim), so please create an issue if it does not work with other plugin managers
 
 ### Navigation (Sidebar)
 
