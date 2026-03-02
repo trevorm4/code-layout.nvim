@@ -2,6 +2,7 @@ local api = vim.api
 local config = require("code_layout.config")
 
 local M = {}
+local sidebar_win = nil
 
 local function parse_symbols(symbols, level, parent_path)
 	local lines = {}
@@ -124,6 +125,12 @@ function M.fzf_open()
 end
 
 function M.open(mode)
+	if config.options.sidebar.toggle and sidebar_win and api.nvim_win_is_valid(sidebar_win) then
+		api.nvim_win_close(sidebar_win, true)
+		sidebar_win = nil
+		return
+	end
+
 	if mode == "float" then
 		return M.fzf_open()
 	end
@@ -145,21 +152,21 @@ function M.open(mode)
 			vim.cmd("botright vertical 35split")
 		end
 
-		local swin = api.nvim_get_current_win()
+		sidebar_win = api.nvim_get_current_win()
 		local sbuf = api.nvim_create_buf(false, true)
-		api.nvim_win_set_buf(swin, sbuf)
+		api.nvim_win_set_buf(sidebar_win, sbuf)
 		api.nvim_buf_set_lines(sbuf, 0, -1, false, lines)
 
 		api.nvim_set_option_value("filetype", "code-layout-symbols", { buf = sbuf })
 		api.nvim_set_option_value("buftype", "nofile", { buf = sbuf })
 		api.nvim_set_option_value("bufhidden", "wipe", { buf = sbuf })
-		api.nvim_set_option_value("number", false, { win = swin })
-		api.nvim_set_option_value("relativenumber", false, { win = swin })
-		api.nvim_set_option_value("winfixwidth", true, { win = swin })
-		api.nvim_set_option_value("cursorline", true, { win = swin })
+		api.nvim_set_option_value("number", false, { win = sidebar_win })
+		api.nvim_set_option_value("relativenumber", false, { win = sidebar_win })
+		api.nvim_set_option_value("winfixwidth", true, { win = sidebar_win })
+		api.nvim_set_option_value("cursorline", true, { win = sidebar_win })
 
 		vim.keymap.set("n", "<CR>", function()
-			local cursor = api.nvim_win_get_cursor(swin)
+			local cursor = api.nvim_win_get_cursor(sidebar_win)
 			local loc = locations[cursor[1]]
 			if loc then
 				api.nvim_win_set_cursor(cur_win, { loc.line + 1, loc.col })
@@ -175,7 +182,7 @@ function M.open(mode)
 				if not api.nvim_win_is_valid(cur_win) then
 					return
 				end
-				local loc = locations[api.nvim_win_get_cursor(swin)[1]]
+				local loc = locations[api.nvim_win_get_cursor(sidebar_win)[1]]
 				if loc then
 					api.nvim_win_set_cursor(cur_win, { loc.line + 1, loc.col })
 					api.nvim_win_call(cur_win, function()
@@ -186,8 +193,9 @@ function M.open(mode)
 		})
 
 		vim.keymap.set("n", "q", function()
-			if api.nvim_win_is_valid(swin) then
-				api.nvim_win_close(swin, true)
+			if api.nvim_win_is_valid(sidebar_win) then
+				api.nvim_win_close(sidebar_win, true)
+				sidebar_win = nil
 			end
 		end, { buffer = sbuf, silent = true })
 	end)
