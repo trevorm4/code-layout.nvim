@@ -1,6 +1,9 @@
 local M = {}
 
 M.defaults = {
+	sidebar = {
+		toggle = true,
+	},
 	floating = {
 		annotate = true,
 	},

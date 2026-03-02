@@ -27,6 +27,9 @@ A neovim layout to show LSP symbols in a tree like structure, either in a split 
   },
   config = function()
     require('code_layout').setup({
+      sidebar = {
+        toggle = true,
+      },
       floating = {
         annotate = true, -- Set to false to hide the full symbol path in the fzf window
       },
@@ -50,6 +53,10 @@ The following are the default settings:
 
 ```lua
 require('code_layout').setup({
+  sidebar = {
+    -- Whether to toggle the window (close if already open) when running the command.
+    toggle = true,
+  },
   floating = {
     -- Whether to show the full symbol path (e.g., "Class › Method") in the fzf window.
     annotate = true,
