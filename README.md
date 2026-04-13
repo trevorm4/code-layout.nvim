@@ -103,6 +103,7 @@ cl:left(20, 50, nil, "My Window")
 ## Acknowledgements
 
 - Heavily inspired by [lspsaga](https://github.com/nvimdev/lspsaga.nvim/), although it is no longer in development
+- This product is NOT endorsed by my employer Google and is solely a personal project that I use in my Neovim setup
 
 
 ## 📄 License
